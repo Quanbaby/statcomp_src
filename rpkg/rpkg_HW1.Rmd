@@ -1,6 +1,6 @@
 ---
 title: "Homework 1 - readable and efficient R code"
-author: "your name here"
+author: "Quan Sun"
 date: "`r format(Sys.time(), '%m/%d/%Y')`"
 output: html_document
 ---
@@ -49,6 +49,86 @@ x <- 4 * sin(r) + .04
 x
 ```
 
+
+
+* Answers:
+
+(1) wrap into a function
+```{r}
+foobar0 <- function(x, z){
+if (sum(x >= .001) < 1) {
+stop("step 1 requires 1 observation(s) with value >= .001")
+}
+fit <- lm(x ~ z)
+r <- fit$residuals
+x <- sin(r) + .01
+if (sum(x >= .002) < 2) {
+  stop("step 2 requires 2 observation(s) with value >= .002")
+}
+fit <- lm(x ~ z)
+r <- fit$residuals
+x <- 2 * sin(r) + .02
+if (sum(x >= .003) < 3) {
+  stop("step 3 requires 3 observation(s) with value >= .003")
+}
+fit <- lm(x ~ z)
+r <- fit$residuals
+x <- 3 * sin(r) + .03
+if (sum(x >= .004) < 4) {
+  stop("step 4 requires 4 observation(s) with value >= .004")
+}
+fit <- lm(x ~ z)
+r <- fit$residuals
+x <- 4 * sin(r) + .04
+return(x)
+}
+```
+
+(2) rewrite
+```{r}
+check_input <- function(x){
+  if(sum(x >= .004) >= 4){
+    return(4)
+  }else if(sum(x >= .003) >= 3) {
+    return(3)
+  }else if(sum(x >= .002) >= 2){
+    return(2)
+  }else if(sum(x >= .001) >= 1){
+    return(1)
+  }else{
+    return(0)
+  }
+}
+
+foobar <- function(x,z){
+  s = check_input(x)
+  if(s == 0){
+    stop("The computation requires 1 observation(s) with value >= .001")
+  }else{
+    for (i in 1:s) {
+      fit <- lm(x ~ z)
+      r <- fit$residuals
+      x <- i*(sin(r) + .01)
+    }
+  }
+  return(x)
+}
+```
+
+
+(3) check results
+```{r}
+set.seed(1)
+x <- rnorm(100)
+z <- rnorm(100)
+all.equal(foobar0(x,z), foobar(x,z))
+```
+
+The two functions are identical.
+
+
+
+
 # Question 2 - vectorize this code and benchmark
 
 * Take the following function `f0` and rewrite it as a function `f`,
@@ -76,6 +156,31 @@ f0 <- function(x,b,a) {
 }
 ```
 
+
+* Answers:
+
+(1)
+```{r}
+f <- function(x,b,a){
+  return(colSums(x%*%t(b)) + rowSums(a))
+}
+```
+
+
+(2)
+```{r}
+all.equal(f0(x,b,a), f(x,b,a))
+```
+
+```{r}
+library(microbenchmark)
+microbenchmark(f0(x,b,a),f(x,b,a))
+```
+
+`f` uses only about 20$\%$ time as that of `f0`.
+
+
+
 # Question 3 - build a faster t-test
 
 * Rewrite the following function `getT0` which computes `m`
@@ -99,3 +204,26 @@ getT0 <- function(x, f) {
   unname(ts)
 }
 ```
+
+
+* Answers:
+(1)
+```{r}
+library(matrixStats)
+getT <- function(x, f){
+  sp = (rowVars(x[,which(f==1)]) + rowVars(x[,which(f==2)]))*(little.n-1)/(n-2)
+  return((rowMeans(x[,which(f==1)])-rowMeans(x[,which(f==2)]))/sqrt(sp/little.n*2))  
+}
+```
+
+(2)
+```{r}
+all.equal(getT0(x,f), getT(x,f))
+```
+
+```{r}
+microbenchmark(getT0(x,f), getT(x,f))
+```
+
+`getT` is about 1000 times faster than `getT0`.
+
