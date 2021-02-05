@@ -1,0 +1,17 @@
+Package: bios735
+Title: Functions Used for Bios735
+Version: 0.0.0.9000
+Imports: matrixStats
+Suggests: testthat
+Authors@R: 
+    person(given = "Quan",
+           family = "Sun",
+           role = c("aut", "cre"),
+           email = "quansun@live.unc.edu",
+           comment = c(ORCID = "0000-0001-8324-2803"))
+Description: The package is for Bios735 class at UNC-Chapel Hill only.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1

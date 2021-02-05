@@ -1,9 +1,11 @@
 ---
 title: "Homework 2 - building an R package"
-author: "your name here"
+author: "Quan Sun"
 date: "`r format(Sys.time(), '%m/%d/%Y')`"
 output: html_document
 ---
+
+### Note: All output are not evaluated. Only for providing codes purpose. The process of building packages were already done before knit this Rmarkdown.
 
 # Question 1 - build and document an R package
 
@@ -32,6 +34,28 @@ with your details. You can put whatever you like as the `Title` of
 your package and so on. Finally, build the package. Add the `.tar.gz`
 built package to your homework repository as well.
 
+
+* Answer:
+
+(1) Create package.
+```{r,eval = FALSE}
+library(usethis)
+library(devtools)
+create_package("bios735", roxygen=TRUE)
+```
+(2) Write the Rscript containing `getT` function and update DESCRIPTION.
+
+(3) Write documentation
+```{r, eval = FALSE}
+devtools::document(pkg = "bios735")
+```
+(4) Build the package.
+```{r, eval = FALSE}
+build("bios735")
+```
+
+
+
 # Question 2 - add tests to your package
 
 Use the *testthat* package to add tests to your package. The details
@@ -52,9 +76,113 @@ Finally, run `check(manual=TRUE)` from within your package. Make sure
 that it passes without error, including `checking tests ...` and put
 the output below: 
 
+* Answer:
+(1) Create test files
+```{r, eval = FALSE}
+library(testthat)
+use_test("getT")
+```
+(2) Write test functions
+
+(3) Check all the tests
+```{r, eval = FALSE}
+test_package("bios735")
+```
+
+(4) Check
+```{r, eval = FALSE}
+check("bios735", manual=TRUE)
+```
+
+
 ```
 #PUT THE OUTPUT OF CHECK HERE:
 > check(manual=TRUE)
+Updating bios735 documentation
+Loading bios735
+Writing NAMESPACE
+Writing NAMESPACE
+── Building ──────────────────────────────────────────────────────────────────────────────────── bios735 ──
+Setting env vars:
+● CFLAGS    : -Wall -pedantic -fdiagnostics-color=always
+● CXXFLAGS  : -Wall -pedantic -fdiagnostics-color=always
+● CXX11FLAGS: -Wall -pedantic -fdiagnostics-color=always
+───────────────────────────────────────────────────────────────────────────────────────────────────────────
+✓  checking for file ‘/Users/quansun/Documents/GitHub/statcomp-2021-Quanbaby/statcomp_src/rpkg/bios735/DESCRIPTION’ ...
+─  preparing ‘bios735’:
+✓  checking DESCRIPTION meta-information ...
+─  checking for LF line-endings in source and make files and shell scripts
+─  checking for empty or unneeded directories
+─  building ‘bios735_0.0.0.9000.tar.gz’
+   
+── Checking ──────────────────────────────────────────────────────────────────────────────────── bios735 ──
+Setting env vars:
+● _R_CHECK_CRAN_INCOMING_REMOTE_: FALSE
+● _R_CHECK_CRAN_INCOMING_       : FALSE
+● _R_CHECK_FORCE_SUGGESTS_      : FALSE
+● NOT_CRAN                      : true
+── R CMD check ────────────────────────────────────────────────────────────────────────────────────────────
+─  using log directory ‘/private/var/folders/zk/13b8bt_54617myx6p1ttv0cc0000gn/T/Rtmp78XFo6/bios735.Rcheck’
+─  using R version 4.0.2 (2020-06-22)
+─  using platform: x86_64-apple-darwin17.0 (64-bit)
+─  using session charset: UTF-8
+─  using option ‘--as-cran’
+✓  checking for file ‘bios735/DESCRIPTION’
+─  this is package ‘bios735’ version ‘0.0.0.9000’
+─  package encoding: UTF-8
+✓  checking package namespace information ...
+✓  checking package dependencies (1.2s)
+✓  checking if this is a source package
+✓  checking if there is a namespace
+✓  checking for executable files ...
+✓  checking for hidden files and directories
+✓  checking for portable file names
+✓  checking for sufficient/correct file permissions
+✓  checking serialization versions ...
+✓  checking whether package ‘bios735’ can be installed (1.2s)
+✓  checking installed package size ...
+✓  checking package directory ...
+✓  checking for future file timestamps (559ms)
+✓  checking DESCRIPTION meta-information ...
+✓  checking top-level files
+✓  checking for left-over files
+✓  checking index information
+✓  checking package subdirectories ...
+✓  checking R files for non-ASCII characters ...
+✓  checking R files for syntax errors ...
+✓  checking whether the package can be loaded ...
+✓  checking whether the package can be loaded with stated dependencies ...
+✓  checking whether the package can be unloaded cleanly ...
+✓  checking whether the namespace can be loaded with stated dependencies ...
+✓  checking whether the namespace can be unloaded cleanly ...
+✓  checking loading without being on the library search path ...
+✓  checking dependencies in R code ...
+✓  checking S3 generic/method consistency (407ms)
+✓  checking replacement functions ...
+✓  checking foreign function calls ...
+✓  checking R code for possible problems (1.7s)
+✓  checking Rd files ...
+✓  checking Rd metadata ...
+✓  checking Rd line widths ...
+✓  checking Rd cross-references ...
+✓  checking for missing documentation entries ...
+✓  checking for code/documentation mismatches (368ms)
+✓  checking Rd \usage sections (509ms)
+✓  checking Rd contents ...
+✓  checking for unstated dependencies in examples ...
+✓  checking examples (461ms)
+✓  checking for unstated dependencies in ‘tests’ ...
+─  checking tests ...
+✓  Running ‘testthat.R’ (745ms)
+✓  checking PDF version of manual (3.4s)
+✓  checking for non-standard things in the check directory
+✓  checking for detritus in the temp directory
+   
+   
+── R CMD check results ──────────────────────────────────────────────────────────── bios735 0.0.0.9000 ────
+Duration: 12.9s
+
+0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 ...
 ```
 
@@ -68,4 +196,19 @@ in the code when calling the function, and examine the variables at
 that point in the code, e.g. `ls()` and using `head`. Take a
 screenshot of the debugging environment and add this screenshot to
 your GitHub repository.
+
+
+* Answer:
+A bug: typo of the capital case "V" in "rowVars" function.
+
+![Debug using "traceback"](bug.png)
+
+
+
+
+
+
+
+
+
 
